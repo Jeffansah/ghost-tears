@@ -2805,7 +2805,7 @@ export namespace Prisma {
     currentWord: string
     currentTurn: string
     player1Id: string
-    player2Id: string
+    player2Id: string | null
     player1GhostTears: string[]
     player2GhostTears: string[]
     winnerId: string | null
@@ -2845,7 +2845,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     player1?: boolean | UserDefaultArgs<ExtArgs>
-    player2?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Game$player2Args<ExtArgs>
     winner?: boolean | Game$winnerArgs<ExtArgs>
     moves?: boolean | Game$movesArgs<ExtArgs>
     _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
@@ -2865,7 +2865,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     player1?: boolean | UserDefaultArgs<ExtArgs>
-    player2?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Game$player2Args<ExtArgs>
     winner?: boolean | Game$winnerArgs<ExtArgs>
   }, ExtArgs["result"]["game"]>
 
@@ -2883,7 +2883,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     player1?: boolean | UserDefaultArgs<ExtArgs>
-    player2?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Game$player2Args<ExtArgs>
     winner?: boolean | Game$winnerArgs<ExtArgs>
   }, ExtArgs["result"]["game"]>
 
@@ -2905,19 +2905,19 @@ export namespace Prisma {
   export type GameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "currentWord" | "currentTurn" | "player1Id" | "player2Id" | "player1GhostTears" | "player2GhostTears" | "winnerId" | "wordListCategory" | "createdAt" | "updatedAt", ExtArgs["result"]["game"]>
   export type GameInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     player1?: boolean | UserDefaultArgs<ExtArgs>
-    player2?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Game$player2Args<ExtArgs>
     winner?: boolean | Game$winnerArgs<ExtArgs>
     moves?: boolean | Game$movesArgs<ExtArgs>
     _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GameIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     player1?: boolean | UserDefaultArgs<ExtArgs>
-    player2?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Game$player2Args<ExtArgs>
     winner?: boolean | Game$winnerArgs<ExtArgs>
   }
   export type GameIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     player1?: boolean | UserDefaultArgs<ExtArgs>
-    player2?: boolean | UserDefaultArgs<ExtArgs>
+    player2?: boolean | Game$player2Args<ExtArgs>
     winner?: boolean | Game$winnerArgs<ExtArgs>
   }
 
@@ -2925,7 +2925,7 @@ export namespace Prisma {
     name: "Game"
     objects: {
       player1: Prisma.$UserPayload<ExtArgs>
-      player2: Prisma.$UserPayload<ExtArgs>
+      player2: Prisma.$UserPayload<ExtArgs> | null
       winner: Prisma.$UserPayload<ExtArgs> | null
       moves: Prisma.$MovePayload<ExtArgs>[]
     }
@@ -2935,7 +2935,7 @@ export namespace Prisma {
       currentWord: string
       currentTurn: string
       player1Id: string
-      player2Id: string
+      player2Id: string | null
       player1GhostTears: string[]
       player2GhostTears: string[]
       winnerId: string | null
@@ -3337,7 +3337,7 @@ export namespace Prisma {
   export interface Prisma__GameClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     player1<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    player2<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    player2<T extends Game$player2Args<ExtArgs> = {}>(args?: Subset<T, Game$player2Args<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     winner<T extends Game$winnerArgs<ExtArgs> = {}>(args?: Subset<T, Game$winnerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     moves<T extends Game$movesArgs<ExtArgs> = {}>(args?: Subset<T, Game$movesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -3774,6 +3774,25 @@ export namespace Prisma {
      * Limit how many Games to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Game.player2
+   */
+  export type Game$player2Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -7389,7 +7408,7 @@ export namespace Prisma {
     currentWord?: StringFilter<"Game"> | string
     currentTurn?: StringFilter<"Game"> | string
     player1Id?: StringFilter<"Game"> | string
-    player2Id?: StringFilter<"Game"> | string
+    player2Id?: StringNullableFilter<"Game"> | string | null
     player1GhostTears?: StringNullableListFilter<"Game">
     player2GhostTears?: StringNullableListFilter<"Game">
     winnerId?: StringNullableFilter<"Game"> | string | null
@@ -7397,7 +7416,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Game"> | Date | string
     updatedAt?: DateTimeFilter<"Game"> | Date | string
     player1?: XOR<UserScalarRelationFilter, UserWhereInput>
-    player2?: XOR<UserScalarRelationFilter, UserWhereInput>
+    player2?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     winner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     moves?: MoveListRelationFilter
   }
@@ -7408,7 +7427,7 @@ export namespace Prisma {
     currentWord?: SortOrder
     currentTurn?: SortOrder
     player1Id?: SortOrder
-    player2Id?: SortOrder
+    player2Id?: SortOrderInput | SortOrder
     player1GhostTears?: SortOrder
     player2GhostTears?: SortOrder
     winnerId?: SortOrderInput | SortOrder
@@ -7430,7 +7449,7 @@ export namespace Prisma {
     currentWord?: StringFilter<"Game"> | string
     currentTurn?: StringFilter<"Game"> | string
     player1Id?: StringFilter<"Game"> | string
-    player2Id?: StringFilter<"Game"> | string
+    player2Id?: StringNullableFilter<"Game"> | string | null
     player1GhostTears?: StringNullableListFilter<"Game">
     player2GhostTears?: StringNullableListFilter<"Game">
     winnerId?: StringNullableFilter<"Game"> | string | null
@@ -7438,7 +7457,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Game"> | Date | string
     updatedAt?: DateTimeFilter<"Game"> | Date | string
     player1?: XOR<UserScalarRelationFilter, UserWhereInput>
-    player2?: XOR<UserScalarRelationFilter, UserWhereInput>
+    player2?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     winner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     moves?: MoveListRelationFilter
   }, "id">
@@ -7449,7 +7468,7 @@ export namespace Prisma {
     currentWord?: SortOrder
     currentTurn?: SortOrder
     player1Id?: SortOrder
-    player2Id?: SortOrder
+    player2Id?: SortOrderInput | SortOrder
     player1GhostTears?: SortOrder
     player2GhostTears?: SortOrder
     winnerId?: SortOrderInput | SortOrder
@@ -7470,7 +7489,7 @@ export namespace Prisma {
     currentWord?: StringWithAggregatesFilter<"Game"> | string
     currentTurn?: StringWithAggregatesFilter<"Game"> | string
     player1Id?: StringWithAggregatesFilter<"Game"> | string
-    player2Id?: StringWithAggregatesFilter<"Game"> | string
+    player2Id?: StringNullableWithAggregatesFilter<"Game"> | string | null
     player1GhostTears?: StringNullableListFilter<"Game">
     player2GhostTears?: StringNullableListFilter<"Game">
     winnerId?: StringNullableWithAggregatesFilter<"Game"> | string | null
@@ -7795,7 +7814,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     player1: UserCreateNestedOneWithoutGamesAsPlayer1Input
-    player2: UserCreateNestedOneWithoutGamesAsPlayer2Input
+    player2?: UserCreateNestedOneWithoutGamesAsPlayer2Input
     winner?: UserCreateNestedOneWithoutGamesWonInput
     moves?: MoveCreateNestedManyWithoutGameInput
   }
@@ -7806,7 +7825,7 @@ export namespace Prisma {
     currentWord: string
     currentTurn: string
     player1Id: string
-    player2Id: string
+    player2Id?: string | null
     player1GhostTears?: GameCreateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameCreateplayer2GhostTearsInput | string[]
     winnerId?: string | null
@@ -7827,7 +7846,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     player1?: UserUpdateOneRequiredWithoutGamesAsPlayer1NestedInput
-    player2?: UserUpdateOneRequiredWithoutGamesAsPlayer2NestedInput
+    player2?: UserUpdateOneWithoutGamesAsPlayer2NestedInput
     winner?: UserUpdateOneWithoutGamesWonNestedInput
     moves?: MoveUpdateManyWithoutGameNestedInput
   }
@@ -7838,7 +7857,7 @@ export namespace Prisma {
     currentWord?: StringFieldUpdateOperationsInput | string
     currentTurn?: StringFieldUpdateOperationsInput | string
     player1Id?: StringFieldUpdateOperationsInput | string
-    player2Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
     player1GhostTears?: GameUpdateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameUpdateplayer2GhostTearsInput | string[]
     winnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7854,7 +7873,7 @@ export namespace Prisma {
     currentWord: string
     currentTurn: string
     player1Id: string
-    player2Id: string
+    player2Id?: string | null
     player1GhostTears?: GameCreateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameCreateplayer2GhostTearsInput | string[]
     winnerId?: string | null
@@ -7881,7 +7900,7 @@ export namespace Prisma {
     currentWord?: StringFieldUpdateOperationsInput | string
     currentTurn?: StringFieldUpdateOperationsInput | string
     player1Id?: StringFieldUpdateOperationsInput | string
-    player2Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
     player1GhostTears?: GameUpdateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameUpdateplayer2GhostTearsInput | string[]
     winnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8272,14 +8291,6 @@ export namespace Prisma {
     not?: NestedEnumGameStatusFilter<$PrismaModel> | $Enums.GameStatus
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -8293,6 +8304,14 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type UserScalarRelationFilter = {
@@ -8849,10 +8868,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGamesAsPlayer1Input, UserUpdateWithoutGamesAsPlayer1Input>, UserUncheckedUpdateWithoutGamesAsPlayer1Input>
   }
 
-  export type UserUpdateOneRequiredWithoutGamesAsPlayer2NestedInput = {
+  export type UserUpdateOneWithoutGamesAsPlayer2NestedInput = {
     create?: XOR<UserCreateWithoutGamesAsPlayer2Input, UserUncheckedCreateWithoutGamesAsPlayer2Input>
     connectOrCreate?: UserCreateOrConnectWithoutGamesAsPlayer2Input
     upsert?: UserUpsertWithoutGamesAsPlayer2Input
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGamesAsPlayer2Input, UserUpdateWithoutGamesAsPlayer2Input>, UserUncheckedUpdateWithoutGamesAsPlayer2Input>
   }
@@ -9161,7 +9182,7 @@ export namespace Prisma {
     wordListCategory?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    player2: UserCreateNestedOneWithoutGamesAsPlayer2Input
+    player2?: UserCreateNestedOneWithoutGamesAsPlayer2Input
     winner?: UserCreateNestedOneWithoutGamesWonInput
     moves?: MoveCreateNestedManyWithoutGameInput
   }
@@ -9171,7 +9192,7 @@ export namespace Prisma {
     status: $Enums.GameStatus
     currentWord: string
     currentTurn: string
-    player2Id: string
+    player2Id?: string | null
     player1GhostTears?: GameCreateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameCreateplayer2GhostTearsInput | string[]
     winnerId?: string | null
@@ -9242,7 +9263,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     player1: UserCreateNestedOneWithoutGamesAsPlayer1Input
-    player2: UserCreateNestedOneWithoutGamesAsPlayer2Input
+    player2?: UserCreateNestedOneWithoutGamesAsPlayer2Input
     moves?: MoveCreateNestedManyWithoutGameInput
   }
 
@@ -9252,7 +9273,7 @@ export namespace Prisma {
     currentWord: string
     currentTurn: string
     player1Id: string
-    player2Id: string
+    player2Id?: string | null
     player1GhostTears?: GameCreateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameCreateplayer2GhostTearsInput | string[]
     wordListCategory?: string
@@ -9386,7 +9407,7 @@ export namespace Prisma {
     currentWord?: StringFilter<"Game"> | string
     currentTurn?: StringFilter<"Game"> | string
     player1Id?: StringFilter<"Game"> | string
-    player2Id?: StringFilter<"Game"> | string
+    player2Id?: StringNullableFilter<"Game"> | string | null
     player1GhostTears?: StringNullableListFilter<"Game">
     player2GhostTears?: StringNullableListFilter<"Game">
     winnerId?: StringNullableFilter<"Game"> | string | null
@@ -9788,7 +9809,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     player1: UserCreateNestedOneWithoutGamesAsPlayer1Input
-    player2: UserCreateNestedOneWithoutGamesAsPlayer2Input
+    player2?: UserCreateNestedOneWithoutGamesAsPlayer2Input
     winner?: UserCreateNestedOneWithoutGamesWonInput
   }
 
@@ -9798,7 +9819,7 @@ export namespace Prisma {
     currentWord: string
     currentTurn: string
     player1Id: string
-    player2Id: string
+    player2Id?: string | null
     player1GhostTears?: GameCreateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameCreateplayer2GhostTearsInput | string[]
     winnerId?: string | null
@@ -9869,7 +9890,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     player1?: UserUpdateOneRequiredWithoutGamesAsPlayer1NestedInput
-    player2?: UserUpdateOneRequiredWithoutGamesAsPlayer2NestedInput
+    player2?: UserUpdateOneWithoutGamesAsPlayer2NestedInput
     winner?: UserUpdateOneWithoutGamesWonNestedInput
   }
 
@@ -9879,7 +9900,7 @@ export namespace Prisma {
     currentWord?: StringFieldUpdateOperationsInput | string
     currentTurn?: StringFieldUpdateOperationsInput | string
     player1Id?: StringFieldUpdateOperationsInput | string
-    player2Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
     player1GhostTears?: GameUpdateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameUpdateplayer2GhostTearsInput | string[]
     winnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10086,7 +10107,7 @@ export namespace Prisma {
     status: $Enums.GameStatus
     currentWord: string
     currentTurn: string
-    player2Id: string
+    player2Id?: string | null
     player1GhostTears?: GameCreateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameCreateplayer2GhostTearsInput | string[]
     winnerId?: string | null
@@ -10115,7 +10136,7 @@ export namespace Prisma {
     currentWord: string
     currentTurn: string
     player1Id: string
-    player2Id: string
+    player2Id?: string | null
     player1GhostTears?: GameCreateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameCreateplayer2GhostTearsInput | string[]
     wordListCategory?: string
@@ -10163,7 +10184,7 @@ export namespace Prisma {
     wordListCategory?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    player2?: UserUpdateOneRequiredWithoutGamesAsPlayer2NestedInput
+    player2?: UserUpdateOneWithoutGamesAsPlayer2NestedInput
     winner?: UserUpdateOneWithoutGamesWonNestedInput
     moves?: MoveUpdateManyWithoutGameNestedInput
   }
@@ -10173,7 +10194,7 @@ export namespace Prisma {
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     currentWord?: StringFieldUpdateOperationsInput | string
     currentTurn?: StringFieldUpdateOperationsInput | string
-    player2Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
     player1GhostTears?: GameUpdateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameUpdateplayer2GhostTearsInput | string[]
     winnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10188,7 +10209,7 @@ export namespace Prisma {
     status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
     currentWord?: StringFieldUpdateOperationsInput | string
     currentTurn?: StringFieldUpdateOperationsInput | string
-    player2Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
     player1GhostTears?: GameUpdateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameUpdateplayer2GhostTearsInput | string[]
     winnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10252,7 +10273,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     player1?: UserUpdateOneRequiredWithoutGamesAsPlayer1NestedInput
-    player2?: UserUpdateOneRequiredWithoutGamesAsPlayer2NestedInput
+    player2?: UserUpdateOneWithoutGamesAsPlayer2NestedInput
     moves?: MoveUpdateManyWithoutGameNestedInput
   }
 
@@ -10262,7 +10283,7 @@ export namespace Prisma {
     currentWord?: StringFieldUpdateOperationsInput | string
     currentTurn?: StringFieldUpdateOperationsInput | string
     player1Id?: StringFieldUpdateOperationsInput | string
-    player2Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
     player1GhostTears?: GameUpdateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameUpdateplayer2GhostTearsInput | string[]
     wordListCategory?: StringFieldUpdateOperationsInput | string
@@ -10277,7 +10298,7 @@ export namespace Prisma {
     currentWord?: StringFieldUpdateOperationsInput | string
     currentTurn?: StringFieldUpdateOperationsInput | string
     player1Id?: StringFieldUpdateOperationsInput | string
-    player2Id?: StringFieldUpdateOperationsInput | string
+    player2Id?: NullableStringFieldUpdateOperationsInput | string | null
     player1GhostTears?: GameUpdateplayer1GhostTearsInput | string[]
     player2GhostTears?: GameUpdateplayer2GhostTearsInput | string[]
     wordListCategory?: StringFieldUpdateOperationsInput | string
