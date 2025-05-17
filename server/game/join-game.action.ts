@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { Game, GameStatus } from "../../app/generated/prisma";
+import { syncGame } from "../pusher";
 
 type JoinGameResponse =
   | { success: true; game: Game }
@@ -48,6 +49,9 @@ export async function joinGame(gameId: string): Promise<JoinGameResponse> {
         status: GameStatus.PLAYING,
       },
     });
+
+    // Sync the updated game state to all players
+    await syncGame(updatedGame);
 
     return { success: true, game: updatedGame };
   } catch (error) {

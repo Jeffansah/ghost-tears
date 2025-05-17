@@ -1,11 +1,11 @@
-import InvitePlayerModal from "@/app/components/invite-player-modal";
+import GameLobby from "@/app/components/game-lobby";
 import { GameStatus } from "@/app/generated/prisma";
 import getActiveGame from "@/server/game/get-active-game.action";
 import { redirect } from "next/navigation";
 
 type Params = Promise<{ category: string; "game-id": string }>;
 
-const GameLobby = async ({ params }: { params: Params }) => {
+const page = async ({ params }: { params: Params }) => {
   const { category, "game-id": gameId } = await params;
 
   if (!category || !gameId) {
@@ -47,14 +47,8 @@ const GameLobby = async ({ params }: { params: Params }) => {
   }
 
   if (activeGame.success && activeGame.game) {
-    return (
-      <div className="flex flex-col gap-2">
-        <div>{activeGame.game.id}</div>
-        <div>{activeGame.game.status}</div>
-        <InvitePlayerModal gameId={activeGame.game.id} />
-      </div>
-    );
+    return <GameLobby game={activeGame.game} />;
   }
 };
 
-export default GameLobby;
+export default page;

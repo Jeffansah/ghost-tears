@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { Game, GameStatus } from "../../app/generated/prisma";
+import { syncGame } from "../pusher";
 
 type GetActiveGameResponse =
   | {
@@ -57,12 +58,17 @@ const getActiveGame = async (): Promise<GetActiveGameResponse> => {
       };
     }
 
+    const gameWithUserId = {
+      ...activeGame,
+      currentUserId: dbUser.id,
+    };
+
+    // Sync the game state to all players
+    await syncGame(gameWithUserId);
+
     return {
       success: true,
-      game: {
-        ...activeGame,
-        currentUserId: dbUser.id,
-      },
+      game: gameWithUserId,
     };
   } catch (error) {
     console.error("Error in getActiveGame:", error);
