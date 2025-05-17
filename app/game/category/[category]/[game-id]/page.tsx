@@ -3,6 +3,8 @@ import { GameStatus } from "@/app/generated/prisma";
 import getActiveGame from "@/server/game/get-active-game.action";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 type Params = Promise<{ category: string; "game-id": string }>;
 
 const page = async ({ params }: { params: Params }) => {

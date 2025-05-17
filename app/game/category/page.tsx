@@ -13,6 +13,8 @@ import SelectCategory from "@/app/components/select-category";
 import getActiveGame from "@/server/game/get-active-game.action";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 const page = async () => {
   const activeGame = await getActiveGame();
 
