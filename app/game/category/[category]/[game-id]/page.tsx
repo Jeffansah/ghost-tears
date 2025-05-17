@@ -1,3 +1,5 @@
+import InvitePlayerModal from "@/app/components/invite-player-modal";
+import { GameStatus } from "@/app/generated/prisma";
 import getActiveGame from "@/server/game/get-active-game.action";
 import { redirect } from "next/navigation";
 
@@ -35,8 +37,23 @@ const GameLobby = async ({ params }: { params: Params }) => {
     redirect("/");
   }
 
+  if (
+    activeGame.success &&
+    activeGame.game &&
+    activeGame.game.status === GameStatus.WAITING &&
+    activeGame.game.player2Id === activeGame.game.currentUserId
+  ) {
+    redirect(`/game/invite/${activeGame.game.id}`);
+  }
+
   if (activeGame.success && activeGame.game) {
-    return <div>{activeGame.game.id}</div>;
+    return (
+      <div className="flex flex-col gap-2">
+        <div>{activeGame.game.id}</div>
+        <div>{activeGame.game.status}</div>
+        <InvitePlayerModal gameId={activeGame.game.id} />
+      </div>
+    );
   }
 };
 

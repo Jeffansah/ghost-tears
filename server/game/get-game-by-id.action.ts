@@ -2,13 +2,13 @@
 
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { Game, GameStatus } from "../../app/generated/prisma";
+import { Game, User } from "../../app/generated/prisma";
 
-type JoinGameResponse =
-  | { success: true; game: Game }
+type GetGameByIdResponse =
+  | { success: true; game: Game & { player1: User; player2: User | null } }
   | { success: false; error: string };
 
-export async function joinGame(gameId: string): Promise<JoinGameResponse> {
+const getGameById = async (gameId: string): Promise<GetGameByIdResponse> => {
   try {
     const user = await currentUser();
     if (!user) {
@@ -25,33 +25,29 @@ export async function joinGame(gameId: string): Promise<JoinGameResponse> {
 
     const game = await prisma.game.findUnique({
       where: { id: gameId },
+      include: {
+        player1: true,
+        player2: true,
+      },
     });
 
     if (!game) {
       return { success: false, error: "Game not found" };
     }
 
-    if (game.player2Id !== dbUser.id) {
+    // Verify if current user belongs to this game
+    if (game.player1Id !== dbUser.id && game.player2Id !== dbUser.id) {
       return {
         success: false,
         error: "Unauthorized: You are not a player in this game",
       };
     }
-    if (game.status === GameStatus.ENDED) {
-      return { success: false, error: "Game is not in playing state" };
-    }
 
-    // Update game status to PLAYING
-    const updatedGame = await prisma.game.update({
-      where: { id: gameId },
-      data: {
-        status: GameStatus.PLAYING,
-      },
-    });
-
-    return { success: true, game: updatedGame };
+    return { success: true, game };
   } catch (error) {
-    console.error("Error in joining game:", error);
-    return { success: false, error: "Failed to join game" };
+    console.error("Error in getGameById:", error);
+    return { success: false, error: "Failed to get game" };
   }
-}
+};
+
+export default getGameById;

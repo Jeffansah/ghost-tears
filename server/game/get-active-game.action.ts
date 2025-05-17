@@ -7,7 +7,7 @@ import { Game, GameStatus } from "../../app/generated/prisma";
 type GetActiveGameResponse =
   | {
       success: true;
-      game: Game;
+      game: Game & { currentUserId: string };
     }
   | {
       success: false;
@@ -59,7 +59,10 @@ const getActiveGame = async (): Promise<GetActiveGameResponse> => {
 
     return {
       success: true,
-      game: activeGame,
+      game: {
+        ...activeGame,
+        currentUserId: dbUser.id,
+      },
     };
   } catch (error) {
     console.error("Error in getActiveGame:", error);
