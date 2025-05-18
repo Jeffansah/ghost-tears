@@ -1,12 +1,17 @@
 "use client";
 
-import { Game } from "@/app/generated/prisma";
+import { Game, User } from "@/app/generated/prisma";
 import { useEffect } from "react";
 import Pusher from "pusher-js";
 
 interface GameStateSyncProps {
   gameId: string;
-  onGameUpdate: (game: Game) => void;
+  onGameUpdate: (
+    game: Game & {
+      player1: User;
+      player2: User | null;
+    }
+  ) => void;
 }
 
 export default function GameStateSync({
@@ -20,9 +25,17 @@ export default function GameStateSync({
 
     const channel = pusher.subscribe(`game-${gameId}`);
 
-    channel.bind("update", (game: Game) => {
-      onGameUpdate(game);
-    });
+    channel.bind(
+      "update",
+      (
+        game: Game & {
+          player1: User;
+          player2: User | null;
+        }
+      ) => {
+        onGameUpdate(game);
+      }
+    );
 
     return () => {
       channel.unbind_all();

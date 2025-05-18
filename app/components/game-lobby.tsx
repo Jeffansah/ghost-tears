@@ -4,8 +4,8 @@ import { Game, GameStatus } from "@/app/generated/prisma";
 import GameStateSync from "./game-state-sync";
 import { useState, useEffect } from "react";
 import NewGameLobby from "./new-game-lobby";
-import WaitingForPlayer from "./waiting-for-player";
 import { usePathname, useRouter } from "next/navigation";
+import WaitingForPlayerLobby from "./waiting-for-player";
 
 const GameLobby = ({
   game: initialGame,
@@ -16,7 +16,7 @@ const GameLobby = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const [game, setGame] = useState<Game>(initialGame);
+  const [game, setGame] = useState(initialGame);
 
   const handleGameUpdate = (updatedGame: Game) => {
     setGame(updatedGame);
@@ -36,7 +36,7 @@ const GameLobby = ({
       {!isWaitingForPlayer ? (
         <NewGameLobby game={game} category={category} />
       ) : (
-        <WaitingForPlayer game={game} />
+        <WaitingForPlayerLobby game={game} />
       )}
       <GameStateSync gameId={game.id} onGameUpdate={handleGameUpdate} />
     </div>

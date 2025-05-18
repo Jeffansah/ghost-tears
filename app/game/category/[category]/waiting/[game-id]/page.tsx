@@ -59,16 +59,6 @@ const page = async ({ params }: { params: Params }) => {
     redirect(`/game/invite/${activeGame.game.id}`);
   }
 
-  if (
-    activeGame.success &&
-    activeGame.game &&
-    activeGame.game.status === GameStatus.PLAYING &&
-    activeGame.game.player1Id === activeGame.game.currentUserId
-  ) {
-    console.log("redirecting to now-playing");
-    redirect(`/game/category/${category}/now-playing/${activeGame.game.id}`);
-  }
-
   if (activeGame.success && activeGame.game) {
     return <GameLobby game={activeGame.game} category={category} />;
   }

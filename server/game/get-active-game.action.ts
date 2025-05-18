@@ -2,12 +2,15 @@
 
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { Game, GameStatus } from "../../app/generated/prisma";
+import { Game, GameStatus, User } from "../../app/generated/prisma";
 
 type GetActiveGameResponse =
   | {
       success: true;
-      game: Game & { currentUserId: string };
+      game: Game & { currentUserId: string } & {
+        player1: User;
+        player2: User | null;
+      };
     }
   | {
       success: false;
@@ -36,6 +39,10 @@ const getActiveGame = async (): Promise<GetActiveGameResponse> => {
           not: GameStatus.ENDED,
         },
         OR: [{ player1Id: dbUser.id }, { player2Id: dbUser.id }],
+      },
+      include: {
+        player1: true,
+        player2: true,
       },
     });
 

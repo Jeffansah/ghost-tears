@@ -1,12 +1,21 @@
 "use client";
 
 import { CopyIcon, UserIcon, UserPlusIcon } from "lucide-react";
-import { Game } from "../generated/prisma";
+import { Game, User } from "../generated/prisma";
 import { Button } from "@/components/ui/button";
 import InvitePlayerModal from "./invite-player-modal";
 import { successToast } from "@/lib/toaster-configurations";
 
-const NewGameLobby = ({ game, category }: { game: Game; category: string }) => {
+const NewGameLobby = ({
+  game,
+  category,
+}: {
+  game: Game & {
+    player1: User;
+    player2: User | null;
+  };
+  category: string;
+}) => {
   const handleCopyInviteLink = () => {
     navigator.clipboard.writeText(
       `${window.location.origin}/game/invite/${game.id}`
@@ -39,7 +48,7 @@ const NewGameLobby = ({ game, category }: { game: Game; category: string }) => {
               <div className="w-8 h-8 rounded-full bg-emerald-600/90 flex items-center justify-center mr-2">
                 <UserIcon className="h-4 w-4" />
               </div>
-              <h2 className="font-bold">Player 1 (You)</h2>
+              <h2 className="font-bold">{game.player1?.username} (You)</h2>
               <span className="ml-auto text-xs px-2 py-1 rounded-full bg-emerald-500/20 backdrop-blur-sm text-emerald-300">
                 Host
               </span>
@@ -60,7 +69,7 @@ const NewGameLobby = ({ game, category }: { game: Game; category: string }) => {
                 <UserIcon className="h-4 w-4 text-zinc-500" />
               </div>
               <h2 className="font-bold text-zinc-500">
-                Waiting for Player 2...
+                Waiting to add Player 2...
               </h2>
             </div>
 
