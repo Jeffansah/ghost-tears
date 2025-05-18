@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "./components/navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,12 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className="bg-zinc-950">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased relative bg-gradient-to-b from-zinc-900 to-zinc-950 text-white text-sm`}
         >
+          <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b w-full  from-emerald-900/20 to-transparent pointer-events-none"></div>
           <Navbar />
           {children}
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

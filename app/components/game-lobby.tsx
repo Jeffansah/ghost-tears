@@ -1,25 +1,43 @@
 "use client";
 
 import { Game, GameStatus } from "@/app/generated/prisma";
-import InvitePlayerModal from "./invite-player-modal";
 import GameStateSync from "./game-state-sync";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import NewGameLobby from "./new-game-lobby";
+import WaitingForPlayer from "./waiting-for-player";
+import { usePathname, useRouter } from "next/navigation";
 
-const GameLobby = ({ game: initialGame }: { game: Game }) => {
+const GameLobby = ({
+  game: initialGame,
+  category,
+}: {
+  game: Game;
+  category: string;
+}) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const [game, setGame] = useState<Game>(initialGame);
 
   const handleGameUpdate = (updatedGame: Game) => {
     setGame(updatedGame);
   };
 
+  useEffect(() => {
+    if (game.status === GameStatus.PLAYING) {
+      console.log("redirecting to now-playing");
+      router.push(`/game/category/${category}/now-playing/${game.id}`);
+    }
+  }, [game.status, category, game.id, router]);
+
+  const isWaitingForPlayer = pathname.includes("waiting");
+
   return (
     <div className="flex flex-col gap-2">
-      <div>Game ID: {game.id}</div>
-      <div>Status: {game.status}</div>
-      {game.status === GameStatus.WAITING && (
-        <InvitePlayerModal gameId={game.id} />
+      {!isWaitingForPlayer ? (
+        <NewGameLobby game={game} category={category} />
+      ) : (
+        <WaitingForPlayer game={game} />
       )}
-      {game.status === GameStatus.PLAYING && <div>Game is in progress!</div>}
       <GameStateSync gameId={game.id} onGameUpdate={handleGameUpdate} />
     </div>
   );

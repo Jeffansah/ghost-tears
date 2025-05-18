@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { joinGame } from "@/server/game/join-game.action";
+import { ArrowRightIcon, Loader2Icon } from "lucide-react";
 
 import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -44,7 +45,7 @@ const JoinGameButton = ({ gameId }: { gameId: string }) => {
 
       if (game.success && game.game) {
         router.push(
-          `/game/category/${game.game.wordListCategory}/${game.game.id}`
+          `/game/category/${game.game.wordListCategory}/now-playing/${game.game.id}`
         );
       }
     } catch (error) {
@@ -55,8 +56,17 @@ const JoinGameButton = ({ gameId }: { gameId: string }) => {
   };
 
   return (
-    <Button onClick={() => handleClick(gameId)} disabled={isLoading}>
+    <Button
+      onClick={() => handleClick(gameId)}
+      disabled={isLoading}
+      className="w-full bg-emerald-700/90 hover:bg-emerald-600/90 text-white py-6 rounded-lg flex items-center justify-center group"
+    >
       {isLoading ? "Joining..." : "Join Game"}
+      {isLoading ? (
+        <Loader2Icon className="ml-2 h-4 w-4 animate-spin group-hover:translate-x-1 transition-transform" />
+      ) : (
+        <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+      )}
     </Button>
   );
 };

@@ -26,7 +26,7 @@ const page = async ({ params }: { params: Params }) => {
 
   const game = data.game;
 
-  redirect(`/game/category/${category}/${game.id}`);
+  redirect(`/game/category/${category}/new/${game.id}`);
 };
 
 export default page;

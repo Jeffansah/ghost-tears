@@ -1,11 +1,12 @@
 import { UserButton } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { GhostIcon } from "lucide-react";
 import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <div className="bg-zinc-900/70 backdrop-blur-md border-b border-emerald-500/10 z-50 fixed top-0 left-0 w-full py-4 ">
-      <div className="w-full flex justify-between items-center max-w-[1300px] mx-auto">
+    <div className="bg-transparent backdrop-blur-sm z-50 fixed top-0 left-0 w-full py-4 ">
+      <div className="w-full flex justify-between relative items-center max-w-[1300px] mx-auto">
         <Link href="/" className="flex items-center gap-2">
           <GhostIcon className="w-6 h-6 text-emerald-400" />
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-500">
@@ -16,7 +17,7 @@ const Navbar = () => {
           </span>
         </Link>
 
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-10 pr-16">
           <Link href="/" className="text-neutral-400 hover:text-emerald-400">
             Home
           </Link>
@@ -26,7 +27,13 @@ const Navbar = () => {
           >
             New game
           </Link>
-          <UserButton />
+          <div className="absolute right-0 top-[2px]">
+            <UserButton
+              appearance={{
+                baseTheme: dark,
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
