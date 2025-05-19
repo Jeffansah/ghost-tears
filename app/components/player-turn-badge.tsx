@@ -3,14 +3,18 @@
 import { UserIcon } from "lucide-react";
 
 const PlayerTurnBadge = ({
+  username,
   collectedLetters,
   isPlayerTurn,
   playerNumber,
 }: {
+  username: string;
   collectedLetters: string[];
   isPlayerTurn: boolean;
   playerNumber: number;
 }) => {
+  const sequence = "GHOST-TEARS";
+
   return (
     <div
       style={{
@@ -30,7 +34,7 @@ const PlayerTurnBadge = ({
         >
           <UserIcon className="h-4 w-4" />
         </div>
-        <h2 className="font-bold">Player {playerNumber}</h2>
+        <h2 className="font-bold">{username}</h2>
         {isPlayerTurn && (
           <span className="ml-auto text-xs px-2 py-1 rounded-full bg-emerald-500/20 backdrop-blur-sm text-emerald-300">
             Your turn
@@ -41,16 +45,17 @@ const PlayerTurnBadge = ({
       <div className="text-sm text-zinc-400">
         Progress:
         <div className="mt-1 font-mono tracking-wider">
-          {collectedLetters.map((letter, i) => (
-            <span key={i} className="text-emerald-400">
-              {letter}
-            </span>
-          ))}
-          <span className="text-zinc-600">
-            {collectedLetters.length < 10
-              ? "GHOSTTEARS".substring(collectedLetters.length)
-              : ""}
-          </span>
+          {sequence.split("").map((letter, i) => {
+            const hasLetter = i < collectedLetters.length;
+            return (
+              <span
+                key={i}
+                className={hasLetter ? "text-emerald-400" : "text-zinc-600"}
+              >
+                {letter}
+              </span>
+            );
+          })}
         </div>
       </div>
     </div>

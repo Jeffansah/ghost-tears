@@ -9,41 +9,41 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  username  String   @unique
-  wins      Int      @default(0)
-  losses    Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  gamesAsPlayer1 Game[] @relation("Player1")
-  gamesAsPlayer2 Game[] @relation("Player2")
-  gamesWon Game[] @relation("Winner")
+  id                  String       @id @default(cuid())
+  clerkId             String       @unique
+  username            String       @unique
+  wins                Int          @default(0)
+  losses              Int          @default(0)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  gamesAsPlayer1      Game[]       @relation("Player1")
+  gamesAsPlayer2      Game[]       @relation("Player2")
+  gamesWon            Game[]       @relation("Winner")
   headToHeadAsPlayer1 HeadToHead[] @relation("Player1")
   headToHeadAsPlayer2 HeadToHead[] @relation("Player2")
-  moves     Move[]
+  moves               Move[]
 
   @@index([clerkId])
   @@index([username])
 }
 
 model Game {
-  id        String   @id @default(cuid())
-  status    GameStatus
-  currentWord String
-  currentTurn String  // player1Id or player2Id
-  player1Id  String
-  player2Id  String?  // Made optional
-  player1    User     @relation("Player1", fields: [player1Id], references: [id])
-  player2    User?    @relation("Player2", fields: [player2Id], references: [id])
-  player1GhostTears String[] // Array of collected letters
-  player2GhostTears String[] // Array of collected letters
-  winnerId   String?
-  winner     User?    @relation("Winner", fields: [winnerId], references: [id])
-  moves      Move[]
-  wordListCategory String @default("pokemon") // Specify which word list to use
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id                String     @id @default(cuid())
+  status            GameStatus
+  currentWord       String
+  currentTurn       String
+  player1Id         String
+  player2Id         String?
+  player1GhostTears String[]
+  player2GhostTears String[]
+  winnerId          String?
+  wordListCategory  String     @default("pokemon")
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  player1           User       @relation("Player1", fields: [player1Id], references: [id])
+  player2           User?      @relation("Player2", fields: [player2Id], references: [id])
+  winner            User?      @relation("Winner", fields: [winnerId], references: [id])
+  moves             Move[]
 
   @@index([status])
   @@index([player1Id, player2Id])
@@ -52,16 +52,15 @@ model Game {
 }
 
 model Move {
-  id        String   @id @default(cuid())
-  gameId    String
-  game      Game     @relation(fields: [gameId], references: [id])
-  playerId  String
-  player    User     @relation(fields: [playerId], references: [id])
-  letter    String
-  word      String   // The word after this move
-  isChallenge Boolean @default(false)
-  challengeResult Boolean? // null if not a challenge, true if valid, false if invalid
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  gameId          String
+  playerId        String
+  moveType        MoveType
+  word            String
+  challengeStatus ChallengeStatus?
+  createdAt       DateTime @default(now())
+  game            Game     @relation(fields: [gameId], references: [id])
+  player          User     @relation(fields: [playerId], references: [id])
 
   @@index([gameId])
   @@index([playerId])
@@ -69,29 +68,29 @@ model Move {
 }
 
 model HeadToHead {
-  id        String   @id @default(cuid())
-  player1Id String
-  player2Id String
-  player1   User     @relation("Player1", fields: [player1Id], references: [id])
-  player2   User     @relation("Player2", fields: [player2Id], references: [id])
-  player1Wins Int    @default(0)
-  player2Wins Int    @default(0)
-  lastPlayed DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  player1Id   String
+  player2Id   String
+  player1Wins Int      @default(0)
+  player2Wins Int      @default(0)
+  lastPlayed  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  player1     User     @relation("Player1", fields: [player1Id], references: [id])
+  player2     User     @relation("Player2", fields: [player2Id], references: [id])
 
   @@unique([player1Id, player2Id])
   @@index([lastPlayed])
 }
 
 model WordCategory {
-  id        String   @id @default(cuid())
-  name      String   @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
-  words     String[] // Array of words in this category
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  words       String[]
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([isActive])
 }
@@ -99,6 +98,19 @@ model WordCategory {
 enum GameStatus {
   WAITING
   PLAYING
-  CHALLENGED
   ENDED
+}
+
+enum MoveType {
+  LETTER_ADDED
+  WORD_SUBMITTED
+  WORD_CHALLENGED
+  WORD_PASSED
+}
+
+enum ChallengeStatus {
+  PENDING
+  VALID
+  INVALID
+  PASSED
 }

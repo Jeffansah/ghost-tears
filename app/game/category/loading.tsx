@@ -1,9 +1,9 @@
-import React from "react";
+import GhostLoadingAnimation from "@/app/components/ghost-loading-animation";
 
 const loading = () => {
   return (
     <div className="h-screen w-screen flex items-center justify-center">
-      <div className="text-4xl font-bold">loading...</div>
+      <GhostLoadingAnimation />
     </div>
   );
 };

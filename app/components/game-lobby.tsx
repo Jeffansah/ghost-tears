@@ -1,6 +1,6 @@
 "use client";
 
-import { Game, GameStatus } from "@/app/generated/prisma";
+import { Game, GameStatus, User } from "@/app/generated/prisma";
 import GameStateSync from "./game-state-sync";
 import { useState, useEffect } from "react";
 import NewGameLobby from "./new-game-lobby";
@@ -11,14 +11,27 @@ const GameLobby = ({
   game: initialGame,
   category,
 }: {
-  game: Game;
+  game: Game & {
+    player1: User;
+    player2: User | null;
+  };
   category: string;
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const [game, setGame] = useState(initialGame);
+  const [game, setGame] = useState<
+    Game & {
+      player1: User;
+      player2: User | null;
+    }
+  >(initialGame);
 
-  const handleGameUpdate = (updatedGame: Game) => {
+  const handleGameUpdate = (
+    updatedGame: Game & {
+      player1: User;
+      player2: User | null;
+    }
+  ) => {
     setGame(updatedGame);
   };
 

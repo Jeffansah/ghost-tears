@@ -46,17 +46,44 @@ export namespace $Enums {
   export const GameStatus: {
   WAITING: 'WAITING',
   PLAYING: 'PLAYING',
-  CHALLENGED: 'CHALLENGED',
   ENDED: 'ENDED'
 };
 
 export type GameStatus = (typeof GameStatus)[keyof typeof GameStatus]
+
+
+export const MoveType: {
+  LETTER_ADDED: 'LETTER_ADDED',
+  WORD_SUBMITTED: 'WORD_SUBMITTED',
+  WORD_CHALLENGED: 'WORD_CHALLENGED',
+  WORD_PASSED: 'WORD_PASSED'
+};
+
+export type MoveType = (typeof MoveType)[keyof typeof MoveType]
+
+
+export const ChallengeStatus: {
+  PENDING: 'PENDING',
+  VALID: 'VALID',
+  INVALID: 'INVALID',
+  PASSED: 'PASSED'
+};
+
+export type ChallengeStatus = (typeof ChallengeStatus)[keyof typeof ChallengeStatus]
 
 }
 
 export type GameStatus = $Enums.GameStatus
 
 export const GameStatus: typeof $Enums.GameStatus
+
+export type MoveType = $Enums.MoveType
+
+export const MoveType: typeof $Enums.MoveType
+
+export type ChallengeStatus = $Enums.ChallengeStatus
+
+export const ChallengeStatus: typeof $Enums.ChallengeStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -3871,10 +3898,9 @@ export namespace Prisma {
     id: string | null
     gameId: string | null
     playerId: string | null
-    letter: string | null
+    moveType: $Enums.MoveType | null
     word: string | null
-    isChallenge: boolean | null
-    challengeResult: boolean | null
+    challengeStatus: $Enums.ChallengeStatus | null
     createdAt: Date | null
   }
 
@@ -3882,10 +3908,9 @@ export namespace Prisma {
     id: string | null
     gameId: string | null
     playerId: string | null
-    letter: string | null
+    moveType: $Enums.MoveType | null
     word: string | null
-    isChallenge: boolean | null
-    challengeResult: boolean | null
+    challengeStatus: $Enums.ChallengeStatus | null
     createdAt: Date | null
   }
 
@@ -3893,10 +3918,9 @@ export namespace Prisma {
     id: number
     gameId: number
     playerId: number
-    letter: number
+    moveType: number
     word: number
-    isChallenge: number
-    challengeResult: number
+    challengeStatus: number
     createdAt: number
     _all: number
   }
@@ -3906,10 +3930,9 @@ export namespace Prisma {
     id?: true
     gameId?: true
     playerId?: true
-    letter?: true
+    moveType?: true
     word?: true
-    isChallenge?: true
-    challengeResult?: true
+    challengeStatus?: true
     createdAt?: true
   }
 
@@ -3917,10 +3940,9 @@ export namespace Prisma {
     id?: true
     gameId?: true
     playerId?: true
-    letter?: true
+    moveType?: true
     word?: true
-    isChallenge?: true
-    challengeResult?: true
+    challengeStatus?: true
     createdAt?: true
   }
 
@@ -3928,10 +3950,9 @@ export namespace Prisma {
     id?: true
     gameId?: true
     playerId?: true
-    letter?: true
+    moveType?: true
     word?: true
-    isChallenge?: true
-    challengeResult?: true
+    challengeStatus?: true
     createdAt?: true
     _all?: true
   }
@@ -4012,10 +4033,9 @@ export namespace Prisma {
     id: string
     gameId: string
     playerId: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge: boolean
-    challengeResult: boolean | null
+    challengeStatus: $Enums.ChallengeStatus | null
     createdAt: Date
     _count: MoveCountAggregateOutputType | null
     _min: MoveMinAggregateOutputType | null
@@ -4040,10 +4060,9 @@ export namespace Prisma {
     id?: boolean
     gameId?: boolean
     playerId?: boolean
-    letter?: boolean
+    moveType?: boolean
     word?: boolean
-    isChallenge?: boolean
-    challengeResult?: boolean
+    challengeStatus?: boolean
     createdAt?: boolean
     game?: boolean | GameDefaultArgs<ExtArgs>
     player?: boolean | UserDefaultArgs<ExtArgs>
@@ -4053,10 +4072,9 @@ export namespace Prisma {
     id?: boolean
     gameId?: boolean
     playerId?: boolean
-    letter?: boolean
+    moveType?: boolean
     word?: boolean
-    isChallenge?: boolean
-    challengeResult?: boolean
+    challengeStatus?: boolean
     createdAt?: boolean
     game?: boolean | GameDefaultArgs<ExtArgs>
     player?: boolean | UserDefaultArgs<ExtArgs>
@@ -4066,10 +4084,9 @@ export namespace Prisma {
     id?: boolean
     gameId?: boolean
     playerId?: boolean
-    letter?: boolean
+    moveType?: boolean
     word?: boolean
-    isChallenge?: boolean
-    challengeResult?: boolean
+    challengeStatus?: boolean
     createdAt?: boolean
     game?: boolean | GameDefaultArgs<ExtArgs>
     player?: boolean | UserDefaultArgs<ExtArgs>
@@ -4079,14 +4096,13 @@ export namespace Prisma {
     id?: boolean
     gameId?: boolean
     playerId?: boolean
-    letter?: boolean
+    moveType?: boolean
     word?: boolean
-    isChallenge?: boolean
-    challengeResult?: boolean
+    challengeStatus?: boolean
     createdAt?: boolean
   }
 
-  export type MoveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "playerId" | "letter" | "word" | "isChallenge" | "challengeResult" | "createdAt", ExtArgs["result"]["move"]>
+  export type MoveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "playerId" | "moveType" | "word" | "challengeStatus" | "createdAt", ExtArgs["result"]["move"]>
   export type MoveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     game?: boolean | GameDefaultArgs<ExtArgs>
     player?: boolean | UserDefaultArgs<ExtArgs>
@@ -4110,10 +4126,9 @@ export namespace Prisma {
       id: string
       gameId: string
       playerId: string
-      letter: string
+      moveType: $Enums.MoveType
       word: string
-      isChallenge: boolean
-      challengeResult: boolean | null
+      challengeStatus: $Enums.ChallengeStatus | null
       createdAt: Date
     }, ExtArgs["result"]["move"]>
     composites: {}
@@ -4543,10 +4558,9 @@ export namespace Prisma {
     readonly id: FieldRef<"Move", 'String'>
     readonly gameId: FieldRef<"Move", 'String'>
     readonly playerId: FieldRef<"Move", 'String'>
-    readonly letter: FieldRef<"Move", 'String'>
+    readonly moveType: FieldRef<"Move", 'MoveType'>
     readonly word: FieldRef<"Move", 'String'>
-    readonly isChallenge: FieldRef<"Move", 'Boolean'>
-    readonly challengeResult: FieldRef<"Move", 'Boolean'>
+    readonly challengeStatus: FieldRef<"Move", 'ChallengeStatus'>
     readonly createdAt: FieldRef<"Move", 'DateTime'>
   }
     
@@ -7171,10 +7185,9 @@ export namespace Prisma {
     id: 'id',
     gameId: 'gameId',
     playerId: 'playerId',
-    letter: 'letter',
+    moveType: 'moveType',
     word: 'word',
-    isChallenge: 'isChallenge',
-    challengeResult: 'challengeResult',
+    challengeStatus: 'challengeStatus',
     createdAt: 'createdAt'
   };
 
@@ -7290,6 +7303,34 @@ export namespace Prisma {
    * Reference to a field of type 'GameStatus[]'
    */
   export type ListEnumGameStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'MoveType'
+   */
+  export type EnumMoveTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MoveType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MoveType[]'
+   */
+  export type ListEnumMoveTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MoveType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ChallengeStatus'
+   */
+  export type EnumChallengeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChallengeStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ChallengeStatus[]'
+   */
+  export type ListEnumChallengeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChallengeStatus[]'>
     
 
 
@@ -7505,10 +7546,9 @@ export namespace Prisma {
     id?: StringFilter<"Move"> | string
     gameId?: StringFilter<"Move"> | string
     playerId?: StringFilter<"Move"> | string
-    letter?: StringFilter<"Move"> | string
+    moveType?: EnumMoveTypeFilter<"Move"> | $Enums.MoveType
     word?: StringFilter<"Move"> | string
-    isChallenge?: BoolFilter<"Move"> | boolean
-    challengeResult?: BoolNullableFilter<"Move"> | boolean | null
+    challengeStatus?: EnumChallengeStatusNullableFilter<"Move"> | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFilter<"Move"> | Date | string
     game?: XOR<GameScalarRelationFilter, GameWhereInput>
     player?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -7518,10 +7558,9 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     playerId?: SortOrder
-    letter?: SortOrder
+    moveType?: SortOrder
     word?: SortOrder
-    isChallenge?: SortOrder
-    challengeResult?: SortOrderInput | SortOrder
+    challengeStatus?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     game?: GameOrderByWithRelationInput
     player?: UserOrderByWithRelationInput
@@ -7534,10 +7573,9 @@ export namespace Prisma {
     NOT?: MoveWhereInput | MoveWhereInput[]
     gameId?: StringFilter<"Move"> | string
     playerId?: StringFilter<"Move"> | string
-    letter?: StringFilter<"Move"> | string
+    moveType?: EnumMoveTypeFilter<"Move"> | $Enums.MoveType
     word?: StringFilter<"Move"> | string
-    isChallenge?: BoolFilter<"Move"> | boolean
-    challengeResult?: BoolNullableFilter<"Move"> | boolean | null
+    challengeStatus?: EnumChallengeStatusNullableFilter<"Move"> | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFilter<"Move"> | Date | string
     game?: XOR<GameScalarRelationFilter, GameWhereInput>
     player?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -7547,10 +7585,9 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     playerId?: SortOrder
-    letter?: SortOrder
+    moveType?: SortOrder
     word?: SortOrder
-    isChallenge?: SortOrder
-    challengeResult?: SortOrderInput | SortOrder
+    challengeStatus?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: MoveCountOrderByAggregateInput
     _max?: MoveMaxOrderByAggregateInput
@@ -7564,10 +7601,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Move"> | string
     gameId?: StringWithAggregatesFilter<"Move"> | string
     playerId?: StringWithAggregatesFilter<"Move"> | string
-    letter?: StringWithAggregatesFilter<"Move"> | string
+    moveType?: EnumMoveTypeWithAggregatesFilter<"Move"> | $Enums.MoveType
     word?: StringWithAggregatesFilter<"Move"> | string
-    isChallenge?: BoolWithAggregatesFilter<"Move"> | boolean
-    challengeResult?: BoolNullableWithAggregatesFilter<"Move"> | boolean | null
+    challengeStatus?: EnumChallengeStatusNullableWithAggregatesFilter<"Move"> | $Enums.ChallengeStatus | null
     createdAt?: DateTimeWithAggregatesFilter<"Move"> | Date | string
   }
 
@@ -7911,10 +7947,9 @@ export namespace Prisma {
 
   export type MoveCreateInput = {
     id?: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
     game: GameCreateNestedOneWithoutMovesInput
     player: UserCreateNestedOneWithoutMovesInput
@@ -7924,19 +7959,17 @@ export namespace Prisma {
     id?: string
     gameId: string
     playerId: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
   }
 
   export type MoveUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     game?: GameUpdateOneRequiredWithoutMovesNestedInput
     player?: UserUpdateOneRequiredWithoutMovesNestedInput
@@ -7946,10 +7979,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
     playerId?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7957,19 +7989,17 @@ export namespace Prisma {
     id?: string
     gameId: string
     playerId: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
   }
 
   export type MoveUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7977,10 +8007,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
     playerId?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8398,14 +8427,18 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type EnumMoveTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MoveType | EnumMoveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMoveTypeFilter<$PrismaModel> | $Enums.MoveType
   }
 
-  export type BoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  export type EnumChallengeStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChallengeStatus | EnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumChallengeStatusNullableFilter<$PrismaModel> | $Enums.ChallengeStatus | null
   }
 
   export type GameScalarRelationFilter = {
@@ -8417,10 +8450,9 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     playerId?: SortOrder
-    letter?: SortOrder
+    moveType?: SortOrder
     word?: SortOrder
-    isChallenge?: SortOrder
-    challengeResult?: SortOrder
+    challengeStatus?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -8428,10 +8460,9 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     playerId?: SortOrder
-    letter?: SortOrder
+    moveType?: SortOrder
     word?: SortOrder
-    isChallenge?: SortOrder
-    challengeResult?: SortOrder
+    challengeStatus?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -8439,27 +8470,30 @@ export namespace Prisma {
     id?: SortOrder
     gameId?: SortOrder
     playerId?: SortOrder
-    letter?: SortOrder
+    moveType?: SortOrder
     word?: SortOrder
-    isChallenge?: SortOrder
-    challengeResult?: SortOrder
+    challengeStatus?: SortOrder
     createdAt?: SortOrder
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  export type EnumMoveTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MoveType | EnumMoveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMoveTypeWithAggregatesFilter<$PrismaModel> | $Enums.MoveType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+    _min?: NestedEnumMoveTypeFilter<$PrismaModel>
+    _max?: NestedEnumMoveTypeFilter<$PrismaModel>
   }
 
-  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+  export type EnumChallengeStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChallengeStatus | EnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumChallengeStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ChallengeStatus | null
     _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
+    _min?: NestedEnumChallengeStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumChallengeStatusNullableFilter<$PrismaModel>
   }
 
   export type HeadToHeadPlayer1IdPlayer2IdCompoundUniqueInput = {
@@ -8510,6 +8544,11 @@ export namespace Prisma {
     player2Wins?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type WordCategoryCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -8536,6 +8575,14 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type GameCreateNestedManyWithoutPlayer1Input = {
@@ -8932,12 +8979,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type EnumMoveTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MoveType
   }
 
-  export type NullableBoolFieldUpdateOperationsInput = {
-    set?: boolean | null
+  export type NullableEnumChallengeStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ChallengeStatus | null
   }
 
   export type GameUpdateOneRequiredWithoutMovesNestedInput = {
@@ -8991,6 +9038,10 @@ export namespace Prisma {
   export type WordCategoryUpdatewordsInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -9146,14 +9197,43 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumMoveTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MoveType | EnumMoveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMoveTypeFilter<$PrismaModel> | $Enums.MoveType
+  }
+
+  export type NestedEnumChallengeStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChallengeStatus | EnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumChallengeStatusNullableFilter<$PrismaModel> | $Enums.ChallengeStatus | null
+  }
+
+  export type NestedEnumMoveTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MoveType | EnumMoveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MoveType[] | ListEnumMoveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMoveTypeWithAggregatesFilter<$PrismaModel> | $Enums.MoveType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMoveTypeFilter<$PrismaModel>
+    _max?: NestedEnumMoveTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumChallengeStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChallengeStatus | EnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ChallengeStatus[] | ListEnumChallengeStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumChallengeStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ChallengeStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumChallengeStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumChallengeStatusNullableFilter<$PrismaModel>
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -9162,14 +9242,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type GameCreateWithoutPlayer1Input = {
@@ -9354,10 +9426,9 @@ export namespace Prisma {
 
   export type MoveCreateWithoutPlayerInput = {
     id?: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
     game: GameCreateNestedOneWithoutMovesInput
   }
@@ -9365,10 +9436,9 @@ export namespace Prisma {
   export type MoveUncheckedCreateWithoutPlayerInput = {
     id?: string
     gameId: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
   }
 
@@ -9517,10 +9587,9 @@ export namespace Prisma {
     id?: StringFilter<"Move"> | string
     gameId?: StringFilter<"Move"> | string
     playerId?: StringFilter<"Move"> | string
-    letter?: StringFilter<"Move"> | string
+    moveType?: EnumMoveTypeFilter<"Move"> | $Enums.MoveType
     word?: StringFilter<"Move"> | string
-    isChallenge?: BoolFilter<"Move"> | boolean
-    challengeResult?: BoolNullableFilter<"Move"> | boolean | null
+    challengeStatus?: EnumChallengeStatusNullableFilter<"Move"> | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFilter<"Move"> | Date | string
   }
 
@@ -9631,10 +9700,9 @@ export namespace Prisma {
 
   export type MoveCreateWithoutGameInput = {
     id?: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
     player: UserCreateNestedOneWithoutMovesInput
   }
@@ -9642,10 +9710,9 @@ export namespace Prisma {
   export type MoveUncheckedCreateWithoutGameInput = {
     id?: string
     playerId: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
   }
 
@@ -10167,10 +10234,9 @@ export namespace Prisma {
   export type MoveCreateManyPlayerInput = {
     id?: string
     gameId: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
   }
 
@@ -10368,10 +10434,9 @@ export namespace Prisma {
 
   export type MoveUpdateWithoutPlayerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     game?: GameUpdateOneRequiredWithoutMovesNestedInput
   }
@@ -10379,39 +10444,35 @@ export namespace Prisma {
   export type MoveUncheckedUpdateWithoutPlayerInput = {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MoveUncheckedUpdateManyWithoutPlayerInput = {
     id?: StringFieldUpdateOperationsInput | string
     gameId?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MoveCreateManyGameInput = {
     id?: string
     playerId: string
-    letter: string
+    moveType: $Enums.MoveType
     word: string
-    isChallenge?: boolean
-    challengeResult?: boolean | null
+    challengeStatus?: $Enums.ChallengeStatus | null
     createdAt?: Date | string
   }
 
   export type MoveUpdateWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     player?: UserUpdateOneRequiredWithoutMovesNestedInput
   }
@@ -10419,20 +10480,18 @@ export namespace Prisma {
   export type MoveUncheckedUpdateWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
     playerId?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MoveUncheckedUpdateManyWithoutGameInput = {
     id?: StringFieldUpdateOperationsInput | string
     playerId?: StringFieldUpdateOperationsInput | string
-    letter?: StringFieldUpdateOperationsInput | string
+    moveType?: EnumMoveTypeFieldUpdateOperationsInput | $Enums.MoveType
     word?: StringFieldUpdateOperationsInput | string
-    isChallenge?: BoolFieldUpdateOperationsInput | boolean
-    challengeResult?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    challengeStatus?: NullableEnumChallengeStatusFieldUpdateOperationsInput | $Enums.ChallengeStatus | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

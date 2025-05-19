@@ -59,6 +59,22 @@ const page = async ({ params }: { params: Params }) => {
     redirect(`/game/invite/${activeGame.game.id}`);
   }
 
+  if (
+    activeGame.success &&
+    activeGame.game &&
+    activeGame.game.status === GameStatus.ENDED
+  ) {
+    redirect(`/game/category/${category}/ended/${activeGame.game.id}`);
+  }
+
+  if (
+    activeGame.success &&
+    activeGame.game &&
+    activeGame.game.status === GameStatus.PLAYING
+  ) {
+    redirect(`/game/category/${category}/now-playing/${activeGame.game.id}`);
+  }
+
   if (activeGame.success && activeGame.game) {
     return <GameLobby game={activeGame.game} category={category} />;
   }

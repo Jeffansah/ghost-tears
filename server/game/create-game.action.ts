@@ -42,8 +42,6 @@ const createGame = async (category: string) => {
       };
     }
 
-    const firstTurn = Math.random() < 0.5 ? dbUser.id : "waiting";
-
     const game = await prisma.game.create({
       data: {
         status: GameStatus.WAITING,
@@ -51,7 +49,7 @@ const createGame = async (category: string) => {
         player1Id: dbUser.id,
         player1GhostTears: [],
         player2GhostTears: [],
-        currentTurn: firstTurn,
+        currentTurn: dbUser.id,
         currentWord: "",
         player2Id: null,
       },

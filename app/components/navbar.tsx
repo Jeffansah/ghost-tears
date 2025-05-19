@@ -22,7 +22,7 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            href="/new-game"
+            href="/game/category"
             className="text-neutral-400 hover:text-emerald-400"
           >
             New game

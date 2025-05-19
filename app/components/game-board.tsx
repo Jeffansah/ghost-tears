@@ -1,0 +1,188 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Game, User, WordCategory, GameStatus } from "../generated/prisma";
+import LetterChain from "./letter-chain";
+import PlayerTurnBadge from "./player-turn-badge";
+import GhostTearsTracker from "./ghost-tears-tracker";
+import FloatingKeyboard from "./floating-keyboard";
+import { updateGameWord } from "@/server/game/words/update-game-word.action";
+import { errorToast } from "@/lib/toaster-configurations";
+import GameStateSync from "./game-state-sync";
+import { challengeWord } from "@/server/game/words/challenge-word.action";
+import WordResponseButtons from "./word-response-buttons";
+import { acceptWord } from "@/server/game/words/accept-word.action";
+import { useStore } from "@/store";
+import { GameEndModal } from "./game-end-modal";
+
+type GameWithPlayers = Game & {
+  player1: User;
+  player2: User | null;
+  currentUserId: string;
+};
+
+const GameBoard = ({
+  game,
+  wordList,
+}: {
+  game: GameWithPlayers;
+  wordList: WordCategory;
+}) => {
+  const [gameState, setGameState] = useState<GameWithPlayers>(game);
+  const [isChallenging, setIsChallenging] = useState(false);
+  const isPlayerTurn = gameState.currentTurn === gameState.currentUserId;
+  const { refresh, setRefresh } = useStore();
+
+  // Update game state when game is updated
+  const handleGameUpdate = (
+    updatedGame: Game & { player1: User; player2: User | null }
+  ) => {
+    setGameState({ ...updatedGame, currentUserId: game.currentUserId });
+    setRefresh(false); // Turn off refresh after game state is updated
+  };
+
+  // Add letter to current word
+  const handleAddLetter = async (letter: string) => {
+    if (!isPlayerTurn) return;
+
+    const newWord = gameState.currentWord + letter;
+
+    // Optimistic update
+    setGameState((prev) => ({ ...prev, currentWord: newWord }));
+    setRefresh(true); // Start refresh for letter update
+
+    try {
+      const result = await updateGameWord(gameState.id, newWord);
+      if (!result.success) {
+        errorToast(result.error || "Failed to update word");
+        // Revert optimistic update
+        setGameState((prev) => ({
+          ...prev,
+          currentWord: gameState.currentWord,
+        }));
+        setRefresh(false); // Turn off refresh on error
+      }
+    } catch (error) {
+      console.error("Failed to update game word:", error);
+      errorToast("Failed to update game word. Please try again.");
+      // Revert optimistic update
+      setGameState((prev) => ({ ...prev, currentWord: gameState.currentWord }));
+      setRefresh(false); // Turn off refresh on error
+    }
+  };
+
+  const handleChallenge = async () => {
+    if (
+      !isPlayerTurn ||
+      gameState.status !== GameStatus.PLAYING ||
+      !gameState.currentWord
+    )
+      return;
+
+    setIsChallenging(true);
+    try {
+      const result = await challengeWord(
+        gameState.id as string,
+        gameState.currentUserId
+      );
+      if (!result.success) {
+        errorToast(result.error || "Failed to challenge word");
+      } else {
+        // Update local state with the new game state
+        setGameState({ ...result.game, currentUserId: game.currentUserId });
+      }
+    } catch (error) {
+      console.error("Error challenging word:", error);
+      errorToast("Failed to challenge word. Please try again.");
+    } finally {
+      setIsChallenging(false);
+    }
+  };
+
+  const handleAccept = async () => {
+    if (
+      !isPlayerTurn ||
+      gameState.status !== GameStatus.PLAYING ||
+      !gameState.currentWord
+    )
+      return;
+
+    setIsChallenging(true);
+    try {
+      const result = await acceptWord(
+        gameState.id as string,
+        gameState.currentUserId
+      );
+      if (!result.success) {
+        errorToast(result.error || "Failed to accept word");
+      }
+    } catch (error) {
+      console.error("Error accepting word:", error);
+      errorToast("Failed to accept word. Please try again.");
+    } finally {
+      setIsChallenging(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-4xl py-8 flex flex-col gap-8">
+      {/* Show GameEndModal when game has a winner */}
+      {gameState.winnerId && (
+        <GameEndModal game={gameState} category={wordList.name} />
+      )}
+
+      {/* Challenge/Submit Section */}
+      {gameState.status === GameStatus.PLAYING && gameState.currentWord && (
+        <>
+          {!refresh ? (
+            <WordResponseButtons
+              submittedWord={gameState.currentWord}
+              isMyTurn={isPlayerTurn}
+              onAccept={handleAccept}
+              onChallenge={handleChallenge}
+              isResponding={isChallenging}
+            />
+          ) : (
+            <p className="text-sm text-zinc-500 text-center">
+              Waiting for opponent to respond to the word...
+            </p>
+          )}
+        </>
+      )}
+
+      {/* Player Status Section */}
+      <div className="grid grid-cols-2 gap-8">
+        <PlayerTurnBadge
+          username={gameState.player1.username}
+          collectedLetters={gameState.player1GhostTears}
+          isPlayerTurn={gameState.currentTurn === gameState.player1Id}
+          playerNumber={1}
+        />
+        <PlayerTurnBadge
+          username={gameState.player2?.username || "Player 2"}
+          collectedLetters={gameState.player2GhostTears}
+          isPlayerTurn={gameState.currentTurn === gameState.player2Id}
+          playerNumber={2}
+        />
+      </div>
+
+      {/* Game Board Section */}
+      <div className="bg-zinc-800/40 backdrop-blur-md rounded-xl p-6 border border-zinc-700/50">
+        <LetterChain currentChain={gameState.currentWord} />
+      </div>
+
+      <GhostTearsTracker
+        player1GhostTears={gameState.player1GhostTears}
+        player2GhostTears={gameState.player2GhostTears}
+      />
+      <FloatingKeyboard
+        onLetterClick={handleAddLetter}
+        isActive={gameState.status === GameStatus.PLAYING && isPlayerTurn}
+        isYourTurn={isPlayerTurn}
+      />
+      <GameStateSync gameId={gameState.id} onGameUpdate={handleGameUpdate} />
+    </div>
+  );
+};
+
+export default GameBoard;

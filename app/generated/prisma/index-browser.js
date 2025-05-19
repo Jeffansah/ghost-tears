@@ -149,10 +149,9 @@ exports.Prisma.MoveScalarFieldEnum = {
   id: 'id',
   gameId: 'gameId',
   playerId: 'playerId',
-  letter: 'letter',
+  moveType: 'moveType',
   word: 'word',
-  isChallenge: 'isChallenge',
-  challengeResult: 'challengeResult',
+  challengeStatus: 'challengeStatus',
   createdAt: 'createdAt'
 };
 
@@ -194,8 +193,21 @@ exports.Prisma.NullsOrder = {
 exports.GameStatus = exports.$Enums.GameStatus = {
   WAITING: 'WAITING',
   PLAYING: 'PLAYING',
-  CHALLENGED: 'CHALLENGED',
   ENDED: 'ENDED'
+};
+
+exports.MoveType = exports.$Enums.MoveType = {
+  LETTER_ADDED: 'LETTER_ADDED',
+  WORD_SUBMITTED: 'WORD_SUBMITTED',
+  WORD_CHALLENGED: 'WORD_CHALLENGED',
+  WORD_PASSED: 'WORD_PASSED'
+};
+
+exports.ChallengeStatus = exports.$Enums.ChallengeStatus = {
+  PENDING: 'PENDING',
+  VALID: 'VALID',
+  INVALID: 'INVALID',
+  PASSED: 'PASSED'
 };
 
 exports.Prisma.ModelName = {
