@@ -280,6 +280,8 @@ const GameBoard = ({
         player1Id={gameState.player1Id}
         player1GhostTears={gameState.player1GhostTears}
         player2GhostTears={gameState.player2GhostTears}
+        player1Username={gameState.player1.username}
+        player2Username={gameState.player2?.username || "Player 2"}
       />
       <FloatingKeyboard
         onLetterClick={handleAddLetter}
