@@ -72,7 +72,9 @@ export function GameEndModal({ game, category }: GameEndModalProps) {
               Game Over!
             </DialogTitle>
             <DialogDescription className="text-center text-zinc-400">
-              {winner.username} has won the game!
+              {game.currentUserId === game.winnerId
+                ? "YOU WIN!"
+                : winner.username + " wins"}
             </DialogDescription>
           </DialogHeader>
 

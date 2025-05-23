@@ -16,6 +16,7 @@ import { useStore } from "@/store";
 import { GameEndModal } from "./game-end-modal";
 import DefenseModal from "./defense-modal";
 import { defendWord } from "@/server/game/words/defend-word.action";
+import { giveUpChallenge } from "@/server/game/words/give-up-challenge.action";
 
 type GameWithPlayers = Game & {
   player1: User;
@@ -173,13 +174,22 @@ const GameBoard = ({
       setIsDefending(false);
     }
   };
-
   const handleGiveUp = async () => {
     setIsDefending(true);
     try {
-      // For now, just accept the challenge loss
-      // TODO: Create a give-up action if needed
-      errorToast("Give up functionality coming soon!");
+      const result = await giveUpChallenge(
+        gameState.id,
+        gameState.currentUserId
+      );
+      if (!result.success) {
+        errorToast(result.error || "Failed to give up challenge");
+      } else {
+        // Game state will be updated via handleGameUpdate when Pusher syncs
+        setGameState({ ...result.game, currentUserId: game.currentUserId });
+      }
+    } catch (error) {
+      console.error("Error giving up challenge:", error);
+      errorToast("Failed to give up challenge. Please try again.");
     } finally {
       setIsDefending(false);
     }
