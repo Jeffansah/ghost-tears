@@ -47,9 +47,7 @@ const GhostTearsTracker = ({
 
       <div className="space-y-2">
         <div className="flex items-center">
-          <span className="text-xs text-zinc-500 w-20">
-            {isPlayer1 ? player1Username : player2Username}:
-          </span>
+          <span className="text-xs text-zinc-500 w-20">{player1Username}:</span>
           <div className="flex-1 grid grid-cols-11 gap-1">
             {sequence.split("").map((letter, index) => {
               const hasLetter = player1GhostTears.length > index;
@@ -66,9 +64,7 @@ const GhostTearsTracker = ({
         </div>
 
         <div className="flex items-center">
-          <span className="text-xs text-zinc-500 w-20">
-            {isPlayer1 ? player1Username : player2Username}:
-          </span>
+          <span className="text-xs text-zinc-500 w-20">{player2Username}:</span>
           <div className="flex-1 grid grid-cols-11 gap-1">
             {sequence.split("").map((letter, index) => {
               const hasLetter = player2GhostTears.length > index;
