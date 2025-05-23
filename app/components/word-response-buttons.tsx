@@ -13,7 +13,6 @@ type WordResponseButtonsProps = {
 };
 
 const WordResponseButtons = ({
-  submittedWord,
   isMyTurn,
   onAccept,
   onChallenge,

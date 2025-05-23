@@ -7,13 +7,15 @@ import PlayerTurnBadge from "./player-turn-badge";
 import GhostTearsTracker from "./ghost-tears-tracker";
 import FloatingKeyboard from "./floating-keyboard";
 import { updateGameWord } from "@/server/game/words/update-game-word.action";
-import { errorToast } from "@/lib/toaster-configurations";
+import { errorToast, successToast } from "@/lib/toaster-configurations";
 import GameStateSync from "./game-state-sync";
 import { challengeWord } from "@/server/game/words/challenge-word.action";
 import WordResponseButtons from "./word-response-buttons";
 import { acceptWord } from "@/server/game/words/accept-word.action";
 import { useStore } from "@/store";
 import { GameEndModal } from "./game-end-modal";
+import DefenseModal from "./defense-modal";
+import { defendWord } from "@/server/game/words/defend-word.action";
 
 type GameWithPlayers = Game & {
   player1: User;
@@ -32,11 +34,37 @@ const GameBoard = ({
   const [isChallenging, setIsChallenging] = useState(false);
   const isPlayerTurn = gameState.currentTurn === gameState.currentUserId;
   const { refresh, setRefresh } = useStore();
+  const [isDefending, setIsDefending] = useState(false);
 
   // Update game state when game is updated
   const handleGameUpdate = (
     updatedGame: Game & { player1: User; player2: User | null }
   ) => {
+    // Detect challenge resolution (CHALLENGED -> PLAYING transition)
+    const wasChallenged = gameState.status === GameStatus.CHALLENGED;
+    const isNowPlaying = updatedGame.status === GameStatus.PLAYING;
+
+    if (wasChallenged && isNowPlaying) {
+      // Challenge was resolved - check who got the tear
+      const currentUserTears =
+        gameState.currentUserId === gameState.player1Id
+          ? gameState.player1GhostTears.length
+          : gameState.player2GhostTears.length;
+
+      const newUserTears =
+        gameState.currentUserId === updatedGame.player1Id
+          ? updatedGame.player1GhostTears.length
+          : updatedGame.player2GhostTears.length;
+
+      const userGotTear = newUserTears > currentUserTears;
+
+      if (userGotTear) {
+        errorToast("You lost the challenge and got a ghost tear!");
+      } else {
+        successToast("You won the challenge - opponent got a tear!");
+      }
+    }
+
     setGameState({ ...updatedGame, currentUserId: game.currentUserId });
     setRefresh(false); // Turn off refresh after game state is updated
   };
@@ -81,14 +109,13 @@ const GameBoard = ({
 
     setIsChallenging(true);
     try {
-      const result = await challengeWord(
-        gameState.id as string,
-        gameState.currentUserId
-      );
+      const result = await challengeWord(gameState.id, gameState.currentUserId);
+      console.log("Challenge Word Result:", result);
       if (!result.success) {
         errorToast(result.error || "Failed to challenge word");
       } else {
         // Update local state with the new game state
+        successToast("Challenged player!");
         setGameState({ ...result.game, currentUserId: game.currentUserId });
       }
     } catch (error) {
@@ -124,6 +151,40 @@ const GameBoard = ({
     }
   };
 
+  const handleDefend = async (defenseWord: string) => {
+    setIsDefending(true);
+
+    try {
+      const result = await defendWord(
+        gameState.id,
+        gameState.currentUserId,
+        defenseWord
+      );
+      if (!result.success) {
+        errorToast(result.error || "Failed to defend word");
+      } else {
+        // Remove duplicate toast notifications - they're now handled in handleGameUpdate
+        setGameState({ ...result.game, currentUserId: game.currentUserId });
+      }
+    } catch (error) {
+      console.error("Error defending word:", error);
+      errorToast("Failed to defend word. Please try again.");
+    } finally {
+      setIsDefending(false);
+    }
+  };
+
+  const handleGiveUp = async () => {
+    setIsDefending(true);
+    try {
+      // For now, just accept the challenge loss
+      // TODO: Create a give-up action if needed
+      errorToast("Give up functionality coming soon!");
+    } finally {
+      setIsDefending(false);
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl py-8 flex flex-col gap-8">
       {/* Show GameEndModal when game has a winner */}
@@ -149,6 +210,18 @@ const GameBoard = ({
           )}
         </>
       )}
+
+      {/* Show Defense Modal when challenged and it's player's turn */}
+      {gameState.status === GameStatus.CHALLENGED &&
+        gameState.currentTurn === gameState.currentUserId && (
+          <DefenseModal
+            isOpen={true}
+            category={wordList.name}
+            currentWord={gameState.currentWord}
+            onDefend={handleDefend}
+            onGiveUp={handleGiveUp}
+          />
+        )}
 
       {/* Player Status Section */}
       <div className="grid grid-cols-2 gap-8">

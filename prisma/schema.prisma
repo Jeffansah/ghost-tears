@@ -98,6 +98,7 @@ model WordCategory {
 enum GameStatus {
   WAITING
   PLAYING
+  CHALLENGED
   ENDED
 }
 
@@ -105,11 +106,13 @@ enum MoveType {
   LETTER_ADDED
   WORD_SUBMITTED
   WORD_CHALLENGED
+  WORD_DEFENDED
   WORD_PASSED
 }
 
 enum ChallengeStatus {
   PENDING
+  DEFENDING
   VALID
   INVALID
   PASSED

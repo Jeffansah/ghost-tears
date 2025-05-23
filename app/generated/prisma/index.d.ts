@@ -46,6 +46,7 @@ export namespace $Enums {
   export const GameStatus: {
   WAITING: 'WAITING',
   PLAYING: 'PLAYING',
+  CHALLENGED: 'CHALLENGED',
   ENDED: 'ENDED'
 };
 
@@ -56,6 +57,7 @@ export const MoveType: {
   LETTER_ADDED: 'LETTER_ADDED',
   WORD_SUBMITTED: 'WORD_SUBMITTED',
   WORD_CHALLENGED: 'WORD_CHALLENGED',
+  WORD_DEFENDED: 'WORD_DEFENDED',
   WORD_PASSED: 'WORD_PASSED'
 };
 
@@ -64,6 +66,7 @@ export type MoveType = (typeof MoveType)[keyof typeof MoveType]
 
 export const ChallengeStatus: {
   PENDING: 'PENDING',
+  DEFENDING: 'DEFENDING',
   VALID: 'VALID',
   INVALID: 'INVALID',
   PASSED: 'PASSED'
