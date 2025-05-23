@@ -276,6 +276,8 @@ const GameBoard = ({
       </div>
 
       <GhostTearsTracker
+        currentUserId={gameState.currentUserId}
+        player1Id={gameState.player1Id}
         player1GhostTears={gameState.player1GhostTears}
         player2GhostTears={gameState.player2GhostTears}
       />
