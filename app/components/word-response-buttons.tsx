@@ -2,22 +2,25 @@
 
 import { motion } from "framer-motion";
 import { AlertTriangleIcon, CheckIcon } from "lucide-react";
-import { toast } from "sonner";
 
 type WordResponseButtonsProps = {
   submittedWord: string;
   isMyTurn: boolean;
   onAccept: () => void;
   onChallenge: () => void;
-  isResponding?: boolean;
+  isAccepting?: boolean;
+  isChallenging?: boolean;
 };
 
 const WordResponseButtons = ({
   isMyTurn,
   onAccept,
   onChallenge,
-  isResponding = false,
+  isAccepting = false,
+  isChallenging = false,
 }: WordResponseButtonsProps) => {
+  const isResponding = isAccepting || isChallenging;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -26,7 +29,7 @@ const WordResponseButtons = ({
     >
       {/* Buttons */}
       {isMyTurn ? (
-        <div className="flex gap-4 justify-center">
+        <div className="flex gap-4 justify-center relative z-[200]">
           <motion.button
             onClick={onAccept}
             whileHover={isResponding ? {} : { scale: 1.03 }}
@@ -39,7 +42,7 @@ const WordResponseButtons = ({
             } transition-colors`}
           >
             <CheckIcon className="mr-2 h-5 w-5" />
-            {isResponding ? "Accepting..." : "Accept Word"}
+            {isAccepting ? "Accepting..." : "Accept Word"}
           </motion.button>
 
           <motion.button
@@ -54,7 +57,7 @@ const WordResponseButtons = ({
             } transition-colors`}
           >
             <AlertTriangleIcon className="mr-2 h-5 w-5" />
-            {isResponding ? "Challenging..." : "Challenge Word"}
+            {isChallenging ? "Challenging..." : "Challenge Word"}
           </motion.button>
         </div>
       ) : (

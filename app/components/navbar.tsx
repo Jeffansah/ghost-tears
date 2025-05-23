@@ -2,6 +2,7 @@ import { UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { GhostIcon } from "lucide-react";
 import Link from "next/link";
+import RulesNavbarLink from "./rules-navbar-link";
 
 const Navbar = () => {
   return (
@@ -27,6 +28,8 @@ const Navbar = () => {
           >
             New game
           </Link>
+          <RulesNavbarLink />
+
           <div className="absolute right-0 top-[2px]">
             <UserButton
               appearance={{

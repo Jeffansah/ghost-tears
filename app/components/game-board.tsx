@@ -17,6 +17,7 @@ import { GameEndModal } from "./game-end-modal";
 import DefenseModal from "./defense-modal";
 import { defendWord } from "@/server/game/words/defend-word.action";
 import { giveUpChallenge } from "@/server/game/words/give-up-challenge.action";
+import RulesModal from "./game-rules-modal";
 
 type GameWithPlayers = Game & {
   player1: User;
@@ -32,10 +33,20 @@ const GameBoard = ({
   wordList: WordCategory;
 }) => {
   const [gameState, setGameState] = useState<GameWithPlayers>(game);
+  const [isAccepting, setIsAccepting] = useState(false);
   const [isChallenging, setIsChallenging] = useState(false);
   const isPlayerTurn = gameState.currentTurn === gameState.currentUserId;
   const { refresh, setRefresh } = useStore();
   const [isDefending, setIsDefending] = useState(false);
+  const { showRulesModal, setShowRulesModal } = useStore();
+
+  useEffect(() => {
+    // Check if user has seen rules before
+    const hasSeenRules = localStorage.getItem("ghost-tears-rules-seen");
+    if (!hasSeenRules) {
+      setShowRulesModal(true);
+    }
+  }, []);
 
   // Update game state when game is updated
   const handleGameUpdate = (
@@ -115,7 +126,6 @@ const GameBoard = ({
       if (!result.success) {
         errorToast(result.error || "Failed to challenge word");
       } else {
-        // Update local state with the new game state
         successToast("Challenged player!");
         setGameState({ ...result.game, currentUserId: game.currentUserId });
       }
@@ -135,7 +145,7 @@ const GameBoard = ({
     )
       return;
 
-    setIsChallenging(true);
+    setIsAccepting(true);
     try {
       const result = await acceptWord(
         gameState.id as string,
@@ -148,7 +158,7 @@ const GameBoard = ({
       console.error("Error accepting word:", error);
       errorToast("Failed to accept word. Please try again.");
     } finally {
-      setIsChallenging(false);
+      setIsAccepting(false);
     }
   };
 
@@ -197,6 +207,16 @@ const GameBoard = ({
 
   return (
     <div className="w-full max-w-4xl py-8 flex flex-col gap-8">
+      {/* Category Badge */}
+      <div className="flex justify-center">
+        <div className="inline-flex items-center px-2 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-sm">
+          <div className="w-1 h-1 bg-emerald-400 rounded-full mr-1.5"></div>
+          <span className="text-emerald-400 font-medium text-xs tracking-wide uppercase">
+            {wordList.name}
+          </span>
+        </div>
+      </div>
+
       {/* Show GameEndModal when game has a winner */}
       {gameState.winnerId && (
         <GameEndModal game={gameState} category={wordList.name} />
@@ -211,7 +231,8 @@ const GameBoard = ({
               isMyTurn={isPlayerTurn}
               onAccept={handleAccept}
               onChallenge={handleChallenge}
-              isResponding={isChallenging}
+              isAccepting={isAccepting}
+              isChallenging={isChallenging}
             />
           ) : (
             <p className="text-sm text-zinc-500 text-center">
@@ -264,6 +285,8 @@ const GameBoard = ({
         isYourTurn={isPlayerTurn}
       />
       <GameStateSync gameId={gameState.id} onGameUpdate={handleGameUpdate} />
+
+      {showRulesModal && <RulesModal />}
     </div>
   );
 };

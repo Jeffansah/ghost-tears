@@ -15,8 +15,6 @@ export async function challengeWord(
   challengingPlayerId: string
 ): Promise<ChallengeWordResult> {
   try {
-    // 1. Get current game state
-
     const game = await prisma.game.findUnique({
       where: { id: gameId },
       include: {
@@ -32,7 +30,6 @@ export async function challengeWord(
       };
     }
 
-    // 2. Validate game state
     if (game.status !== GameStatus.PLAYING) {
       return {
         success: false,
@@ -54,13 +51,11 @@ export async function challengeWord(
       };
     }
 
-    // 3. Determine defending player
+    // Determine defending player
     const defendingPlayerId =
       challengingPlayerId === game.player1Id ? game.player2Id! : game.player1Id;
 
-    // 4. Create challenge move and update game state
     const result = await prisma.$transaction(async (tx) => {
-      // Create the challenge move
       const move = await tx.move.create({
         data: {
           gameId,
@@ -77,7 +72,6 @@ export async function challengeWord(
         data: {
           status: GameStatus.CHALLENGED,
           currentTurn: defendingPlayerId,
-          // Keep currentWord as-is for the defense phase
         },
         include: {
           player1: true,
@@ -88,7 +82,6 @@ export async function challengeWord(
       return { move, game: updatedGame };
     });
 
-    // 5. Sync game state
     await syncGame(result.game);
 
     return {
