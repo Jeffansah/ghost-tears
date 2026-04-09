@@ -5,8 +5,7 @@ Word-chain game with a [Convex](https://convex.dev) backend and a [Vite](https:/
 ## Development
 
 ```bash
-cd vite_app && npm install   # first time
-npm install                  # at repo root (Convex CLI deps)
+npm install
 ```
 
 Terminal 1 — Convex:
@@ -21,7 +20,7 @@ Terminal 2 — Vite (default [http://localhost:5173](http://localhost:5173)):
 npm run dev
 ```
 
-Set `VITE_CONVEX_URL` / `NEXT_PUBLIC_CONVEX_URL` in `.env.local` at the repo root (Vite loads env from the parent directory).
+Set `VITE_CONVEX_URL` / `NEXT_PUBLIC_CONVEX_URL` in `.env.local` at the repo root.
 
 ## Build
 

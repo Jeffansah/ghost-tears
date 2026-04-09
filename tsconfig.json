@@ -1,14 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["esnext"],
-    "strict": true,
-    "skipLibCheck": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "noEmit": true,
-    "types": ["node"]
-  },
-  "include": ["convex/**/*.ts"],
-  "exclude": ["node_modules", "vite_app", "convex/_generated"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }
